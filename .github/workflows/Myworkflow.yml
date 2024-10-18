@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build_release:
     runs-on: ubuntu-latest
     steps:
      - name: checkout
@@ -30,7 +30,7 @@ jobs:
        uses: actions/upload-artifact@v4.4.3
        with:
           name: Android.apk
-          path: app/release/app-release.apk
+          path: app/build/outputs/apk/release/app-release.apk
 
      - name: Build Release AAb
        run: ./gradlew bundleRelease
