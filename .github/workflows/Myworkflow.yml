@@ -22,7 +22,7 @@ jobs:
        id: decode_keystore
        uses: timheuer/base64-to-file@v1
        with:
-           fileName: ${{ secrets.SIGNING_KEY_STORE_PATH }}
+           fileName: 'keystore/your_signing_keystore.jks'
            encodedString: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
 
      - name: Run Tests with Gradle
