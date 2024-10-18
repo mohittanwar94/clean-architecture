@@ -22,13 +22,31 @@ android {
         }
     }
 
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = "test"
+            keyPassword = "test"
+            storeFile = file("/Users/mohittanwar/Desktop/test")
+            storePassword = "test12"
+        }
+        create("release") {
+            keyAlias = "test"
+            keyPassword = "test12"
+            storeFile = file("/Users/mohittanwar/Desktop/test")
+            storePassword = "test12"
+        }
+    }
+
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
+            isDebuggable = false
+        }
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug")
+            isDebuggable = true
         }
     }
     compileOptions {
