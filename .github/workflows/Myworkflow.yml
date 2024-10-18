@@ -25,13 +25,11 @@ jobs:
        run: chmod +x ./gradlew
      - name: Build Release APK
        run: ./gradlew assembleRelease
-           - name: Releasing using Hub
-             uses: VladDaniliuk/action-release-releaseapk@master
-             env:
-               GITHUB_TOKEN: ${{ secrets.TOKEN }}
-               VERSION_VARIABLE: versionName
-               APP_FILE: buildSrc/Android.kt
-               APP_FOLDER: ./app/release/app.apk
-               CHANGELOG_FILE: ./CHANGELOG.md
-               RELEASE_TITLE: New Build
-               NAME_VARIABLE: app-release.apk
+     - name: Releasing using Hub
+       uses: VladDaniliuk/action-release-releaseapk@master
+       env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          VERSION_VARIABLE: 1.0
+          APP_FOLDER: ./app/release/app-release.apk
+          RELEASE_TITLE: NewBuild
+          NAME_VARIABLE: app-release.apk
