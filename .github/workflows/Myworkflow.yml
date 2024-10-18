@@ -26,8 +26,11 @@ jobs:
      - name: Build Release APK
        run: ./gradlew assembleRelease
 
+     - name: Build Release AAb
+       run: ./gradlew bundleRelease
+
      - name: Upload a Build Artifact
        uses: actions/upload-artifact@v4.4.3
        with:
-           name: Android.apk
+           name: Android
            path: app/release/
