@@ -13,14 +13,24 @@ on:
           - release
           - both
   push:
-    branches: [ main ]
+    branches: [ main , development ]
   pull_request:
-    branches: [ main ]
+    branches: [ main , development]
 
 jobs:
   build_release:
     runs-on: ubuntu-latest
     steps:
+     - name: Select environment
+       id: select-environment
+       run: |
+            if [ "${{ workflow_dispatch.inputs.testers }}" == "release" | "${{ workflow_dispatch.inputs.testers }}" == "both"]; then
+              echo "production"
+              echo "selected-stage=production" >> "$GITHUB_OUTPUT"
+            else
+              echo "debugBuild"
+              echo "selected-stage=debug" >> "$GITHUB_OUTPUT"
+            fi
      - name: checkout
        uses: actions/checkout@v4.2.1
 
