@@ -61,7 +61,7 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
        run: |
-         case "${{ needs.determine-environment.outputs.selected-environment }}" in
+         case "${{ needs.determine-environment.outputs.selected-stage }}" in
           release)
             ./gradlew assembleRelease --stacktrace
             ;;
