@@ -22,7 +22,7 @@ jobs:
      - name: Select environment
        id: select-environment
        run: |
-         if [[ "$BITRISE_GIT_BRANCH" == "develop" || "$BITRISE_GIT_BRANCH" == "both" ]]
+         if [[ inputs.testers == "develop" || inputs.testers == "both" ]]
          then
               echo "production"
          else
