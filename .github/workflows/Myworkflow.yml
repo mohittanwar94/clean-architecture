@@ -56,44 +56,46 @@ jobs:
      - name: Make Gradle executable
        run: chmod +x ./gradlew
 
-     - name: Build Release APK
+     - name: Build APK file
        env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+       run: |
+         case "${{ needs.determine-environment.outputs.selected-stage }}" in
+          release)
+            ./gradlew assembleRelease --stacktrace
+            ;;
+          debug)
+            ./gradlew assembleDebug --stacktrace
+            ;;
+          *)
+            echo "Deploying to unknown environment..."
+            ;;
+         esac
+
+     - name: Build bundle AAb file
+       env:
+         SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+         SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+         SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
        if: ${{ needs.determine-environment.outputs.selected-environment == 'release' }}
-       run: ./gradlew assembleRelease --stacktrace
-
-     - name: Build Debug APK
-       env:
-         SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-         SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-         SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-       if: ${{ needs.determine-environment.outputs.selected-environment == 'debug' }}
-       run: ./gradlew assembleDebug --stacktrace
-
-     - name: Build Release AAb
-       env:
-         SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-         SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-         SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-       if: ${{ needs.determine-environment.outputs.selected-environment == 'release' }}
-       run: ./gradlew bundleRelease --stacktrace
-
-     - name: Build Debug AAb
-       env:
-         SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-         SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-         SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-       if: ${{ needs.determine-environment.outputs.selected-environment == 'debug' }}
-       run: ./gradlew bundleDebug --stacktrace
+       run: |
+         case "${{ needs.determine-environment.outputs.selected-stage }}" in
+          release)
+            ./gradlew bundleRelease --stacktrace
+            ;;
+          debug)
+            ./gradlew bundleDebug --stacktrace
+            ;;
+          *)
+            echo "Deploying to unknown environment..."
+            ;;
+         esac
 
      - name: Upload a Build Artifact
        uses: actions/upload-artifact@v4.4.3
        with:
           name: release-artifacts
           path: |
-             app/build/outputs/apk/release/
-             app/build/outputs/apk/debug/
-             app/build/outputs/bundle/debug/
-             app/build/outputs/bundle/release/
+             app/build/outputs/
