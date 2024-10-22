@@ -22,7 +22,8 @@ jobs:
      - name: Select environment
        id: select-environment
        run: |
-         if [ ["${{ inputs.testers }}" == "release"] || ["${{ inputs.testers }}" == "both"] ]; then
+         if [[ "$BITRISE_GIT_BRANCH" == "develop" || "$BITRISE_GIT_BRANCH" == "both" ]]
+         then
               echo "production"
          else
               echo "debugBuild"
