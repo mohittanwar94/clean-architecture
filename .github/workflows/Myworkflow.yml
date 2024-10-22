@@ -35,6 +35,20 @@ jobs:
      - name: checkout
        uses: actions/checkout@v4.2.1
 
+     - name: Deploy to environment
+       run: |
+        case "${{ needs.determine-environment.outputs.selected-stage }}" in
+              release)
+                echo "Deploying to production environment..."
+                ;;
+              debug)
+                echo "Deploying to staging environment..."
+                ;;
+              *)
+                echo "Deploying to unknown environment..."
+                ;;
+        esac
+
      - name: Setup Java JDK
        uses: actions/setup-java@v4.4.0
        with:
@@ -62,13 +76,13 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
        run: |
          case "${{ needs.determine-environment.outputs.selected-stage }}" in
-          release)
+           release)
             ./gradlew assembleRelease --stacktrace
             ;;
-          debug)
+           debug)
             ./gradlew assembleDebug --stacktrace
             ;;
-          *)
+           *)
             echo "Deploying to unknown environment..."
             ;;
          esac
@@ -80,13 +94,13 @@ jobs:
          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
        run: |
          case "${{ needs.determine-environment.outputs.selected-stage }}" in
-          release)
+           release)
             ./gradlew bundleRelease --stacktrace
             ;;
-          debug)
+           debug)
             ./gradlew bundleDebug --stacktrace
             ;;
-          *)
+           *)
             echo "Deploying to unknown environment..."
             ;;
          esac
