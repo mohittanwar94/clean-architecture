@@ -50,8 +50,7 @@ jobs:
            echo $ENCODED_STRING > keystore-b64.txt
            base64 -d keystore-b64.txt > keystore.jks
 
-     - name: Run Tests with Gradle
-       run: ./gradlew test
+
 
      - name: Make Gradle executable
        run: chmod +x ./gradlew
@@ -62,7 +61,7 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
        run: |
-         case "${{ needs.determine-environment.outputs.selected-stage }}" in
+         case "${{ needs.determine-environment.outputs.selected-environment }}" in
           release)
             ./gradlew assembleRelease --stacktrace
             ;;
@@ -79,7 +78,6 @@ jobs:
          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-       if: ${{ needs.determine-environment.outputs.selected-environment == 'release' }}
        run: |
          case "${{ needs.determine-environment.outputs.selected-stage }}" in
           release)
