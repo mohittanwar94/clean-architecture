@@ -23,12 +23,6 @@ android {
     }
 
     signingConfigs {
-        getByName("debug") {
-            keyAlias = "test"
-            keyPassword = "test"
-            storeFile = file("/Users/mohittanwar/Desktop/test")
-            storePassword = "test12"
-        }
         create("release") {
             storeFile = file("../keystore.jks")
             storePassword = System.getenv("SIGNING_STORE_PASSWORD")
@@ -44,7 +38,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig =  if(System.getenv("SIGNING_STORE_PASSWORD")==null) signingConfigs.getByName("debug") else signingConfigs.getByName("release")
             isDebuggable = false
         }
         getByName("debug") {
