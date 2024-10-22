@@ -68,7 +68,7 @@ jobs:
          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-       if: ${{ needs.determine-environment.outputs.selected-environment }}" == "debug" }}
+       if: ${{ needs.determine-environment.outputs.selected-environment == "debug" }}
        run: ./gradlew assembleDebug --stacktrace
 
      - name: Build Release AAb
@@ -85,7 +85,7 @@ jobs:
          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
        if: ${{ needs.determine-environment.outputs.selected-environment == "debug" }}
-       run: ./gradlew bundleRelease --stacktrace
+       run: ./gradlew bundleDebug --stacktrace
 
      - name: Upload a Build Artifact
        uses: actions/upload-artifact@v4.4.3
