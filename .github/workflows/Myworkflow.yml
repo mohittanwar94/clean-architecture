@@ -27,8 +27,8 @@ jobs:
           else
               echo "selected-stage=debug" >> "$GITHUB_OUTPUT"
           fi
-        outputs:
-          selected-stage: ${{ steps.select-stage.outputs.selected-stage }}
+    outputs:
+      selected-stage: ${{ steps.select-stage.outputs.selected-stage }}
   build_release:
     needs: determine-environment
     runs-on: ubuntu-latest
