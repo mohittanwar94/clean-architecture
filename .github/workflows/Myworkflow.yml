@@ -24,7 +24,7 @@ jobs:
      - name: Select environment
        id: select-environment
        run: |
-         if [ "${{ inputs.testers }}" == "release" || "${{ inputs.testers }}" == "both" ]; then
+         if [ ("${{ inputs.testers }}" == "release") || ("${{ inputs.testers }}" == "both") ]; then
               echo "production"
               echo "selected-stage=production" >> "$GITHUB_OUTPUT"
          else
