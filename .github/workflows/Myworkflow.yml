@@ -24,9 +24,9 @@ jobs:
        run: |
          if [[ "${{ inputs.testers }}" == "release" || "${{ inputs.testers }}" == "both" ]]
          then
-              echo "production"
+             echo "selected-stage=release" >> "$GITHUB_OUTPUT"
          else
-              echo "debugBuild"
+             echo "selected-stage=debug" >> "$GITHUB_OUTPUT"
          fi
      - name: checkout
        uses: actions/checkout@v4.2.1
@@ -57,15 +57,32 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+       if: [[ "${{ steps.select-environment.outputs.selected-environment }}" == "release" || "${{ steps.select-environment.outputs.selected-environment }}" == "both" ]]
        run: ./gradlew assembleRelease --stacktrace
+
+     - name: Build Debug APK
+       env:
+         SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+         SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+         SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+       if: [ [ "${{ steps.select-environment.outputs.selected-environment }}" == "debug" || "${ { steps.select-environment.outputs.selected-environment } }" == "both" ] ]
+       run: ./gradlew assembleDebug --stacktrace
 
      - name: Build Release AAb
        env:
          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+       if: [[ "${{ steps.select-environment.outputs.selected-environment }}" == "release" || "${{ steps.select-environment.outputs.selected-environment }}" == "both" ]]
        run: ./gradlew bundleRelease --stacktrace
 
+     - name: Build Debug AAb
+       env:
+         SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+         SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+         SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+       if: [ [ "${{ steps.select-environment.outputs.selected-environment }}" == "debug" || "${ { steps.select-environment.outputs.selected-environment } }" == "both" ] ]
+       run: ./gradlew bundleRelease --stacktrace
 
      - name: Upload a Build Artifact
        uses: actions/upload-artifact@v4.4.3
