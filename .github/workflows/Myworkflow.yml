@@ -13,6 +13,8 @@ on:
           - release
   pull_request:
     branches: [ main , development]
+  push:
+    branches: [ main , development]
 
 jobs:
   determine-environment:
