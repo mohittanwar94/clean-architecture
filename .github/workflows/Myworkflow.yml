@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Select environment
-        id: select-environment
+        id: select-stage
         run: |
           if [[ "${{ inputs.testers }}" == "release" || "${{ inputs.testers }}" == "both" ]]
           then
@@ -29,6 +29,7 @@ jobs:
           fi
     outputs:
       selected-stage: ${{ steps.select-stage.outputs.selected-stage }}
+
   build_release:
     needs: determine-environment
     runs-on: ubuntu-latest
