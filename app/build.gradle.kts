@@ -31,16 +31,19 @@ android {
         }
         create("release") {
             storeFile = file("../keystore.jks")
-            storePassword =System.getenv("SIGNING_STORE_PASSWORD")
-            keyAlias =System.getenv("SIGNING_KEY_ALIAS")
-            keyPassword =System.getenv("SIGNING_KEY_PASSWORD")
+            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
         }
     }
 
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs.getByName("release")
             isDebuggable = false
         }
@@ -72,7 +75,7 @@ android {
 }
 
 dependencies {
-   // implementation(project("1-domain"))
+    // implementation(project("1-domain"))
     implementation(project(":0-data"))
     implementation(project(":common"))
     implementation(libs.androidx.core.ktx)
