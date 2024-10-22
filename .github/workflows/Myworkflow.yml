@@ -15,18 +15,22 @@ on:
     branches: [ main , development]
 
 jobs:
-  build_release:
+  determine-environment:
     runs-on: ubuntu-latest
     steps:
-     - name: Select environment
-       id: select-environment
-       run: |
-         if [[ "${{ inputs.testers }}" == "release" || "${{ inputs.testers }}" == "both" ]]
-         then
-             echo "selected-stage=release" >> "$GITHUB_OUTPUT"
-         else
-             echo "selected-stage=debug" >> "$GITHUB_OUTPUT"
-         fi
+      - name: Select environment
+        id: select-environment
+        run: |
+          if [[ "${{ inputs.testers }}" == "release" || "${{ inputs.testers }}" == "both" ]]
+          then
+              echo "selected-stage=release" >> "$GITHUB_OUTPUT"
+          else
+              echo "selected-stage=debug" >> "$GITHUB_OUTPUT"
+          fi
+  build_release:
+    runs-on: ubuntu-latest
+    needs: determine-environment
+    steps:
      - name: checkout
        uses: actions/checkout@v4.2.1
 
@@ -56,7 +60,7 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-       if: ${{ steps.select-environment.outputs.selected-environment == "release" }}
+       if: ${{ needs.determine-environment.outputs.selected-environment == "release" }}
        run: ./gradlew assembleRelease --stacktrace
 
      - name: Build Debug APK
@@ -64,7 +68,7 @@ jobs:
          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-       if: [[ "${{ steps.select-environment.outputs.selected-environment }}" == "debug" || "${ { steps.select-environment.outputs.selected-environment } }" == "both" ]]
+       if: ${{ needs.determine-environment.outputs.selected-environment }}" == "debug" }}
        run: ./gradlew assembleDebug --stacktrace
 
      - name: Build Release AAb
