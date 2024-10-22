@@ -22,7 +22,7 @@ jobs:
      - name: Select environment
        id: select-environment
        run: |
-         if [[ inputs.testers == "develop" || inputs.testers == "both" ]]
+         if [[ "${{ inputs.testers }}" == "develop" || "${{ inputs.testers }}" == "both" ]]
          then
               echo "production"
          else
