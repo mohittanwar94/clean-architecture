@@ -9,13 +9,9 @@ on:
         type: choice
         description: "Select testers"
         options:
-          - android
-          - internalTesters
-          - everyone
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+          - debug
+          - release
+          - both
 
 jobs:
   build_release:
