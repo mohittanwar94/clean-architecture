@@ -69,7 +69,8 @@ jobs:
            echo $ENCODED_STRING > keystore-b64.txt
            base64 -d keystore-b64.txt > keystore.jks
 
-
+     - name: Make Gradle executable
+       run: ./gradlew test
 
      - name: Make Gradle executable
        run: chmod +x ./gradlew
