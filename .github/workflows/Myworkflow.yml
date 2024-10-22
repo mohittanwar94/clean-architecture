@@ -1,5 +1,17 @@
 name: CleanWorkFlow
 on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Release-Build"
+        default: "Generate release build"
+      testers:
+        type: choice
+        description: "Select testers"
+        options:
+          - android
+          - internalTesters
+          - everyone
   push:
     branches: [ main ]
   pull_request:
@@ -17,13 +29,15 @@ jobs:
        with:
           distribution: 'temurin'
           java-version: '17'
-
      - name: Decode Keystore
-       id: decode_keystore
-       uses: timheuer/base64-to-file@v1
-       with:
-           fileName: 'keystore/your_signing_keystore.jks'
-           encodedString: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
+       env:
+           ENCODED_STRING: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
+           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+       run: |
+           echo $ENCODED_STRING > keystore-b64.txt
+           base64 -d keystore-b64.txt > keystore.jks
 
      - name: Run Tests with Gradle
        run: ./gradlew test

@@ -30,15 +30,7 @@ android {
             storePassword = "test12"
         }
         create("release") {
-            val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
-            val allFilesFromDir = File(tmpFilePath).listFiles()
-
-            if (allFilesFromDir != null) {
-                val keystoreFile = allFilesFromDir.first()
-                keystoreFile.renameTo(File("keystore/your_keystore.jks"))
-            }
-
-            storeFile = file("keystore/your_keystore.jks")
+            storeFile = file("../your_keystore.jks")
             storePassword =System.getenv("SIGNING_STORE_PASSWORD")
             keyAlias =System.getenv("SIGNING_KEY_ALIAS")
             keyPassword =System.getenv("SIGNING_KEY_PASSWORD")
