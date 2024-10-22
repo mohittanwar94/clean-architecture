@@ -76,7 +76,7 @@ jobs:
          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-       if: [[ "${{ steps.select-environment.outputs.selected-environment }}" == "release" || "${{ steps.select-environment.outputs.selected-environment }}" == "both" ]]
+       if: ${{ needs.determine-environment.outputs.selected-environment == "release" }}
        run: ./gradlew bundleRelease --stacktrace
 
      - name: Build Debug AAb
@@ -84,7 +84,7 @@ jobs:
          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-       if: [[ "${{ steps.select-environment.outputs.selected-environment }}" == "debug" || "${ { steps.select-environment.outputs.selected-environment } }" == "both" ] ]
+       if: ${{ needs.determine-environment.outputs.selected-environment == "debug" }}
        run: ./gradlew bundleRelease --stacktrace
 
      - name: Upload a Build Artifact
