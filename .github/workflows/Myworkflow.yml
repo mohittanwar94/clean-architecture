@@ -113,4 +113,5 @@ jobs:
        with:
           name: release-artifacts
           path: |
-             app/build/outputs/
+             app/build/outputs/apk/
+             app/build/outputs/bundle/
